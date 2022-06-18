@@ -57,7 +57,7 @@ int main(void)
     //run_led_set(1);
 	//alarm_set(1);
 
-    sys_wdg_init();   
+    //sys_wdg_init();   
 
 
     shell_init();
@@ -83,6 +83,8 @@ int main(void)
         run_led_toggle();
 
         feedIWdg();
+		
+		delay_ms(500);
     }
 }
 

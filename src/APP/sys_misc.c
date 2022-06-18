@@ -15,13 +15,11 @@
 
 
 #ifdef GD32F40_41xxx
-#define RUN_LED_GPIO_PIN    GPIO_PIN_4
+#define RUN_LED_GPIO_PIN    GPIO_PIN_1
 #define ALARM_GPIO_PIN      GPIO_PIN_0
-#define TEST_GPIO_PIN       GPIO_PIN_1
 #else
-#define RUN_LED_GPIO_PIN    GPIO_Pin_4
+#define RUN_LED_GPIO_PIN    GPIO_Pin_1
 #define ALARM_GPIO_PIN      GPIO_Pin_0
-#define TEST_GPIO_PIN       GPIO_Pin_1
 #endif
 
 
@@ -57,21 +55,6 @@ void alarm_set(uint32_t val)
 
 int test_bit_state_get()
 {
-#ifdef GD32F40_41xxx
-     if(gpio_input_bit_get(GPIOA, TEST_GPIO_PIN) == SET){
-         return 1;
-     }
-     else{
-         return 0;
-     }
-#else
-     if(GPIO_ReadInputDataBit(GPIOA, TEST_GPIO_PIN) == Bit_SET){
-         return 1;
-     }
-     else{
-         return 0;
-     }
-#endif     
 }
 
 
@@ -94,11 +77,6 @@ void sys_gpio_init()
     /* reset ALARM GPIO pin */
     gpio_bit_reset(GPIOA, ALARM_GPIO_PIN);
 
-    /* configure TEST GPIO port */ 
-    gpio_mode_set(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, TEST_GPIO_PIN);
-    gpio_output_options_set(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, TEST_GPIO_PIN);
-    /* reset TEST GPIO pin */
-    gpio_bit_reset(GPIOA, TEST_GPIO_PIN);
 
 
 #else
@@ -106,11 +84,7 @@ void sys_gpio_init()
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//使能GPIOA,GPIOE时钟
 
-    GPIO_InitStructure.GPIO_Pin = TEST_GPIO_PIN; //TEST 对应引脚
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;//普通输入模式
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
 
     GPIO_InitStructure.GPIO_Pin = ALARM_GPIO_PIN | RUN_LED_GPIO_PIN; //ALARM对应引脚PA0，RUN led 对应PA4
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; //普通输出模式
